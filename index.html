@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-translate-key="page_title">ZG Sound - محطة العمل الصوتية الرقمية الاحترافية</title>
+    <link rel="icon" type="image/png" href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhccupd_ljVx216yhAOPoOs8LQe9ihlLmny-gxnzwFaFSSuZIxhI9r5oYDbgWqxHsXoSG5hLxXQ7fb5u7dt0oMUoBzjmFkCeaC3Sf6f-IfFNLrFvzVBZngPq5EGsabHeZMs7DL32RVhAeflmDm5N24DV1Bxm-haT6QH-vJs7fRIkEaD17L3-CImPaHz_x65/s1024/ZG-sound-icon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables for Dynamic Theming */
+        :root {
+            --primary-color: #00b4d8;
+            --primary-hover: #0096c7;
+            --bg-gradient-start: #0f2027;
+            --bg-gradient-end: #203a43;
+            --secondary-color: #6c757d;
+            --text-color: #1a1a1a;
+            --text-color-light: #f0f0f0;
+            --text-muted-color: #555;
+            --glass-bg: rgba(255, 255, 255, 0.18);
+            --glass-border: rgba(255, 255, 255, 0.28);
+            --glass-shadow: rgba(0, 0, 0, 0.15);
+            --body-bg: #f8fafc;
+            --border-radius: 16px;
+            --transition-speed: 0.3s;
+        }
+
+        body.dark-mode {
+            --bg-gradient-start: #0a0e17;
+            --bg-gradient-end: #162032;
+            --text-color: #f1f5f9;
+            --text-color-light: #1e293b;
+            --text-muted-color: #94a3b8;
+            --glass-bg: rgba(15, 23, 42, 0.55);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-shadow: rgba(0, 0, 0, 0.5);
+            --body-bg: #090d16;
+        }
+
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: linear-gradient(-45deg, var(--bg-gradient-start), var(--bg-gradient-end), #0077b6);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            transition: background 0.5s;
+        }
+
+        body.animation-disabled .background-animation {
+            animation: none;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Cairo', 'Roboto', sans-serif;
+            background-color: var(--body-bg);
+            color: var(--text-color);
+            transition: background-color 0.5s, color 0.5s;
+            line-height: 1.8;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        html[lang="zh"] body { font-family: 'Roboto', 'Cairo', sans-serif; }
+        .container { max-width: 1100px; margin: 20px auto; padding: 20px; flex-grow: 1; width: 100%; }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px 0 var(--glass-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -150%;
+            width: 70%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+            transform: skewX(-25deg);
+            transition: left 0.8s;
+            pointer-events: none;
+        }
+        .glass-card:hover::before { left: 150%; }
+
+        /* Global Header */
+        .header-controls {
+            padding: 15px 25px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 15px;
+            z-index: 1000;
+        }
+        .logo-placeholder { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+        .logo-placeholder img { width: 48px; height: 48px; border-radius: 12px; object-fit: contain; }
+        .logo-title { font-weight: 900; font-size: 1.3rem; color: var(--primary-color); letter-spacing: 0.5px; }
+
+        .controls-container { display: flex; align-items: center; gap: 10px; }
+        .language-switcher { display: flex; background: rgba(0,0,0,0.12); border-radius: 25px; padding: 4px; }
+        .language-switcher button {
+            background: transparent; border: none; color: var(--text-color); padding: 7px 14px;
+            border-radius: 20px; cursor: pointer; transition: all 0.3s ease; font-weight: bold; font-size: 0.85rem;
+        }
+        .language-switcher button.active {
+            background: var(--primary-color); color: #fff; box-shadow: 0 2px 10px rgba(0, 180, 216, 0.4);
+        }
+        .control-btn {
+            background: rgba(0,0,0,0.06); border: 1px solid transparent; border-radius: 50%; width: 40px; height: 40px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            color: var(--text-color); transition: all var(--transition-speed) ease;
+        }
+        .control-btn:hover { background-color: rgba(0,0,0,0.15); transform: rotate(15deg); }
+        .theme-toggle { font-size: 1.1rem; }
+        .theme-toggle .fa-moon { display: none; }
+        .dark-mode .theme-toggle .fa-sun { display: none; }
+        .dark-mode .theme-toggle .fa-moon { display: inline-block; }
+
+        /* App Showcase Card */
+        .app-card {
+            padding: 35px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .app-logo {
+            flex-shrink: 0;
+            width: 140px;
+            height: 140px;
+            border-radius: 28px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #001220, #00b4d8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(0, 180, 216, 0.3);
+            border: 2px solid var(--glass-border);
+        }
+        .app-logo img { width: 100%; height: 100%; object-fit: contain; }
+        .app-details { flex: 1; min-width: 280px; }
+        .app-title-container { display: flex; align-items: center; gap: 15px; margin-bottom: 12px; flex-wrap: wrap; }
+        .app-title { font-size: 2.7rem; font-weight: 900; color: var(--text-color); line-height: 1.2; }
+        .app-badge {
+            background: linear-gradient(45deg, var(--primary-color), #0077b6);
+            color: #fff; font-weight: bold; padding: 4px 12px; border-radius: 8px; font-size: 0.85rem; letter-spacing: 1px;
+        }
+        .age-rating {
+            background-color: var(--text-color); color: var(--body-bg); font-weight: bold;
+            padding: 4px 10px; border-radius: 8px; font-size: 0.85rem;
+        }
+        .app-short-desc { font-size: 1.15rem; margin-bottom: 20px; opacity: 0.95; line-height: 1.7; }
+
+        .motto-banner {
+            background: rgba(0, 180, 216, 0.12);
+            border: 1px solid rgba(0, 180, 216, 0.35);
+            color: var(--text-color);
+            padding: 12px 18px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .motto-banner i { color: var(--primary-color); font-size: 1.2rem; }
+
+        /* Downloads Area */
+        .downloads-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .download-buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 15px;
+        }
+        .download-btn {
+            position: relative;
+            color: #fff;
+            padding: 14px 22px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: none;
+            cursor: pointer;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        .download-btn:hover { transform: translateY(-3px); }
+        .download-btn-windows {
+            background: linear-gradient(45deg, #0078d4, #005a9e);
+            box-shadow: 0 6px 18px rgba(0, 120, 212, 0.4);
+        }
+        .download-btn-linux {
+            background: linear-gradient(45deg, #e95420, #c34113);
+            box-shadow: 0 6px 18px rgba(233, 84, 32, 0.4);
+        }
+        .download-btn-linux-deb {
+            background: linear-gradient(45deg, #a80030, #7d0023);
+            box-shadow: 0 6px 18px rgba(168, 0, 48, 0.4);
+        }
+        .download-btn-watch-ad {
+            background: linear-gradient(45deg, #e63946, #b5179e);
+            box-shadow: 0 6px 18px rgba(230, 57, 70, 0.4);
+        }
+        .download-btn-watch-ad:hover {
+            box-shadow: 0 8px 24px rgba(230, 57, 70, 0.6);
+        }
+
+        .download-progress {
+            position: absolute; top: 0; left: 0; height: 100%; width: 0;
+            background-color: rgba(255, 255, 255, 0.35); border-radius: 50px; transition: width 2s ease-out;
+            pointer-events: none;
+        }
+        .download-btn.downloading .download-progress { width: 100%; }
+
+        /* Highlights Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 35px;
+        }
+        .feature-box {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: rgba(0, 180, 216, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+        }
+        .feature-box h3 { font-size: 1.3rem; color: var(--text-color); font-weight: 700; }
+        .feature-box p { font-size: 0.95rem; opacity: 0.85; line-height: 1.7; }
+
+        /* Section Layout */
+        .section { margin-bottom: 35px; }
+        .section-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .section-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0;
+            padding-bottom: 8px;
+            border-bottom: 3px solid var(--primary-color);
+            display: inline-block;
+        }
+
+        /* Posters Showcase Grid */
+        .posters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 20px;
+            margin-bottom: 35px;
+        }
+        .poster-item {
+            position: relative;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 6px 20px var(--glass-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: #000;
+            aspect-ratio: 1122 / 1402;
+        }
+        .poster-item:hover {
+            transform: translateY(-6px) scale(1.03);
+            box-shadow: 0 12px 32px var(--glass-shadow);
+        }
+        .poster-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .poster-caption {
+            padding: 10px 12px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            background: rgba(0,0,0,0.75);
+            color: #fff;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            text-align: center;
+            backdrop-filter: blur(6px);
+        }
+
+        /* Gallery */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+        .gallery-item {
+            position: relative;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 6px 20px var(--glass-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .gallery-item:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 12px 30px var(--glass-shadow); }
+        .gallery-item img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+        }
+        .gallery-caption {
+            padding: 10px 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            background: rgba(0,0,0,0.65);
+            color: #fff;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            text-align: center;
+            backdrop-filter: blur(5px);
+        }
+
+        /* Description Card */
+        .description-card { padding: 35px; line-height: 1.9; }
+        .description-card h3 { font-size: 1.5rem; color: var(--primary-color); margin-top: 25px; margin-bottom: 12px; }
+        .description-card ul { list-style-position: inside; padding-right: 15px; }
+        html[dir="ltr"] .description-card ul { padding-left: 15px; padding-right: 0; }
+        .description-card li { margin-bottom: 8px; }
+
+        /* Global Footer */
+        .app-footer {
+            padding: 25px 20px;
+            text-align: center;
+            font-size: 0.95rem;
+            color: var(--text-muted-color);
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-top: 1px solid var(--glass-border);
+            margin-top: 40px;
+        }
+        .app-footer a { color: var(--text-color); font-weight: bold; text-decoration: none; transition: color var(--transition-speed); }
+        .app-footer a:hover { color: var(--primary-color); }
+        .app-footer p { margin-top: 8px; opacity: 0.85; }
+
+        /* Modals Common */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.65); backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px); z-index: 2000;
+            display: none; align-items: center; justify-content: center;
+            transition: opacity 0.3s ease;
+        }
+        .modal-content {
+            background: var(--glass-bg); backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px); border: 1px solid var(--glass-border);
+            padding: 28px; border-radius: var(--border-radius);
+            box-shadow: 0 10px 40px var(--glass-shadow);
+            width: 90%; max-width: 820px; max-height: 85vh;
+            display: flex; flex-direction: column; position: relative; overflow: hidden;
+        }
+        .modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid var(--glass-border); padding-bottom: 15px; margin-bottom: 15px;
+        }
+        .modal-header h2 { margin: 0; color: var(--primary-color); font-size: 1.6rem; }
+        .modal-close-btn {
+            background: none; border: none; font-size: 2rem; cursor: pointer;
+            color: var(--text-muted-color); transition: transform 0.2s; line-height: 1;
+        }
+        .modal-close-btn:hover { transform: scale(1.2); color: var(--text-color); }
+        .modal-body {
+            overflow-y: auto; overflow-x: hidden; padding-right: 12px; padding-left: 5px;
+        }
+        html[dir="rtl"] .modal-body { padding-left: 12px; padding-right: 5px; }
+
+        /* Custom Scrollbar */
+        .modal-body::-webkit-scrollbar { width: 7px; }
+        .modal-body::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.08); border-radius: 10px; }
+        .modal-body::-webkit-scrollbar-thumb {
+            background-color: var(--primary-color); border-radius: 10px;
+        }
+
+        .modal-footer {
+            margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--glass-border);
+            text-align: right;
+        }
+        html[dir="rtl"] .modal-footer { text-align: left; }
+
+        /* Services Modal List */
+        .services-list { display: flex; flex-direction: column; gap: 12px; }
+        .service-link {
+            display: flex; align-items: center; gap: 18px; padding: 14px 20px;
+            background: rgba(0,0,0,0.06); border-radius: var(--border-radius);
+            text-decoration: none; color: var(--text-color);
+            transition: all var(--transition-speed) ease; font-size: 1.05rem; font-weight: bold;
+        }
+        .service-link:hover {
+            background-color: rgba(0, 180, 216, 0.15); transform: translateX(-8px);
+            color: var(--primary-color);
+        }
+        html[dir="ltr"] .service-link:hover { transform: translateX(8px); }
+        .service-link i { font-size: 1.4rem; width: 32px; text-align: center; color: var(--primary-color); }
+
+        /* About Modal Styles */
+        #about-modal-body { text-align: center; }
+        #about-modal-body .profile-pic {
+            width: 120px; height: 120px; border-radius: 50%;
+            border: 3px solid var(--primary-color); margin-bottom: 15px; object-fit: cover;
+        }
+        #about-modal-body h3 { color: var(--primary-color); margin-bottom: 5px; font-size: 1.6rem; }
+        #about-modal-body h4 { font-size: 1.15rem; color: var(--text-muted-color); margin-top: 0; margin-bottom: 20px; }
+        #about-modal-body .info-section, #privacy-modal-body .info-section {
+            margin: 20px 0; background: var(--glass-bg); padding: 18px;
+            border-radius: var(--border-radius); border: 1px solid var(--glass-border); text-align: initial;
+        }
+        #about-modal-body .info-section h5, #privacy-modal-body h3 {
+            font-size: 1rem; text-transform: uppercase; letter-spacing: 1px;
+            color: var(--text-muted-color); border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 6px; margin-bottom: 12px;
+        }
+        #privacy-modal-body h3 { color: var(--primary-color); text-transform: none; font-size: 1.35rem; }
+        #about-modal-body p { margin: 5px 0; line-height: 1.6; }
+        #about-modal-body .projects-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-top: 15px;
+        }
+        #about-modal-body .project-card {
+            background: rgba(0,0,0,0.08); padding: 12px; border-radius: var(--border-radius);
+            transition: transform 0.3s ease;
+        }
+        #about-modal-body .project-card:hover { transform: scale(1.04); }
+        #about-modal-body .project-card img { max-width: 100%; height: auto; border-radius: 6px; }
+        #about-modal-body .certs-grid {
+            display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 16px; margin-top: 15px;
+        }
+        #about-modal-body .certs-grid img {
+            max-height: 55px; width: auto; filter: grayscale(40%); opacity: 0.85; transition: all 0.3s ease;
+        }
+        #about-modal-body .certs-grid img:hover { filter: none; opacity: 1; transform: scale(1.1); }
+        .social-card {
+            max-width: 260px; margin: 20px auto 0 auto; border-radius: var(--border-radius);
+            padding: 15px; background-color: transparent;
+        }
+        .social-card .profileimage img { border-radius: 50%; width: 95px; height: 95px; object-fit: cover; }
+        .social-card .Name { color: var(--text-color); font-size: 1.15rem; margin-top: 10px; font-weight: bold; }
+        .social-card .socialbar {
+            background-color: var(--glass-bg); border: 1px solid var(--glass-border);
+            border-radius: 3em; width: 100%; padding: 12px; margin-top: 12px;
+            display: flex; justify-content: space-around; align-items: center;
+        }
+        .social-card .socialbar a { transition: 0.3s; color: var(--text-muted-color); text-decoration: none; }
+        .social-card .socialbar a svg { width: 18px; height: 18px; }
+        #facebook:hover { color: #3b5998; } #instagram:hover { color: #d62976; }
+        #whatsapp:hover { color: #25d366; } #telegram:hover { color: #0088cc; }
+        #youtube:hover { color: #ff0000; }
+
+        /* Settings Modal */
+        .settings-section { margin-bottom: 20px; padding: 18px; background: var(--glass-bg); border-radius: var(--border-radius); }
+        .settings-section h4 { margin-top: 0; margin-bottom: 12px; color: var(--primary-color); border-bottom: 1px solid var(--glass-border); padding-bottom: 8px; }
+        .setting-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .setting-item label { flex-grow: 1; font-weight: 600; font-size: 0.95rem; }
+        .setting-item input[type="color"] { border: none; background: transparent; width: 38px; height: 38px; cursor: pointer; border-radius: 50%; }
+        .toggle-switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #aaa; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--primary-color); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        /* Image Modal */
+        .image-modal-content {
+            padding: 12px; background: var(--glass-bg); backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border);
+            border-radius: 16px; max-width: 94vw; max-height: 92vh; display: flex; flex-direction: column; position: relative;
+        }
+        #image-modal-close-btn {
+            position: absolute; top: 18px; right: 18px; z-index: 2010; color: #fff;
+            background: rgba(0,0,0,0.6); width: 36px; height: 36px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.3);
+        }
+        #modal-image { width: 100%; height: auto; max-height: 85vh; object-fit: contain; border-radius: 10px; }
+
+        .btn {
+            padding: 10px 22px; font-weight: bold; color: #fff; background-color: var(--primary-color);
+            border: none; border-radius: var(--border-radius); cursor: pointer; transition: all var(--transition-speed);
+        }
+        .btn.btn-secondary { background-color: var(--secondary-color); }
+        .btn.btn-danger { background-color: #e63946; }
+        .btn:hover { opacity: 0.9; transform: translateY(-2px); }
+
+        @media (max-width: 768px) {
+            .app-title { font-size: 2.1rem; }
+            .app-card { padding: 22px; }
+            .header-controls { flex-direction: column; gap: 15px; }
+            .download-buttons-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+    <div class="background-animation"></div>
+
+    <div class="container">
+        <!-- ==== GLOBAL HEADER ==== -->
+        <header class="header-controls glass-card">
+            <div class="logo-placeholder" onclick="window.scrollTo({top: 0, behavior: 'smooth'});">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhccupd_ljVx216yhAOPoOs8LQe9ihlLmny-gxnzwFaFSSuZIxhI9r5oYDbgWqxHsXoSG5hLxXQ7fb5u7dt0oMUoBzjmFkCeaC3Sf6f-IfFNLrFvzVBZngPq5EGsabHeZMs7DL32RVhAeflmDm5N24DV1Bxm-haT6QH-vJs7fRIkEaD17L3-CImPaHz_x65/s1024/ZG-sound-icon.png" alt="ZG Sound Logo">
+                <span class="logo-title">ZG Sound</span>
+            </div>
+            <div class="controls-container">
+                <div class="language-switcher">
+                    <button id="lang-ar" class="active">AR</button>
+                    <button id="lang-en">EN</button>
+                    <button id="lang-zh">ZH</button>
+                </div>
+                <button id="services-toggle-btn" class="control-btn" title="Other Services">
+                    <i class="fas fa-layer-group"></i>
+                </button>
+                <button id="about-toggle-btn" class="control-btn" title="About">
+                    <i class="fas fa-info-circle"></i>
+                </button>
+                <button id="privacy-toggle-btn" class="control-btn" title="Privacy Policy">
+                    <i class="fas fa-shield-halved"></i>
+                </button>
+                <button id="settings-toggle-btn" class="control-btn" title="Settings">
+                    <i class="fas fa-cog"></i>
+                </button>
+                <button class="control-btn theme-toggle" id="theme-toggle-btn" title="Toggle Theme">
+                    <i class="fas fa-sun"></i>
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <!-- ==== HERO / APP CARD ==== -->
+            <section class="app-card glass-card">
+                <div class="app-logo">
+                    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhccupd_ljVx216yhAOPoOs8LQe9ihlLmny-gxnzwFaFSSuZIxhI9r5oYDbgWqxHsXoSG5hLxXQ7fb5u7dt0oMUoBzjmFkCeaC3Sf6f-IfFNLrFvzVBZngPq5EGsabHeZMs7DL32RVhAeflmDm5N24DV1Bxm-haT6QH-vJs7fRIkEaD17L3-CImPaHz_x65/s1024/ZG-sound-icon.png" alt="ZG Sound Logo">
+                </div>
+                <div class="app-details">
+                    <div class="app-title-container">
+                        <h1 class="app-title">ZG Sound</h1>
+                        <span class="app-badge" data-translate-key="app_badge">PRO DAW</span>
+                        <span class="age-rating">All</span>
+                    </div>
+                    <p class="app-short-desc" data-translate-key="shortDescription">
+                        محطة عمل صوتية رقمية (DAW) فائقة السرعة بنيت بتقنيات حديثة لتقديم أداء استثنائي وتأخير شبه معدوم. تم تصميمها لتسجيل وهندسة وتوزيع الصوت والموسيقى باحترافية كاملة مع واجهات تحرير وميكسينج مستقلة ودعم كامل للصوت المحيطي والـ MIDI.
+                    </p>
+
+                    <div class="motto-banner">
+                        <i class="fas fa-wave-square"></i>
+                        <span data-translate-key="motto_note">معاً لاستقلال مصر الرقمي - أداء صوتي استثنائي بأحدث التقنيات الحديثة</span>
+                    </div>
+
+                    <div class="downloads-wrapper">
+                        <div class="download-buttons-grid">
+                            <!-- Windows Download -->
+                            <a href="https://drive.google.com/file/d/12ulQ2qNtsn-8xv1mdsZ3V5MB9v1t3nBM/view?usp=sharing" class="download-btn download-btn-windows" id="download-win">
+                                <i class="fab fa-windows"></i>
+                                <span class="download-text" data-translate-key="btn_win">تحميل للويندوز (MSI x64)</span>
+                                <div class="download-progress"></div>
+                            </a>
+
+                            <!-- Linux Download AppImage -->
+                            <a href="https://drive.google.com/file/d/1cJw04AvdKSzCh8EXNsMlQ6_awUK4mj3L/view?usp=sharing" class="download-btn download-btn-linux" id="download-linux">
+                                <i class="fab fa-linux"></i>
+                                <span class="download-text" data-translate-key="btn_linux_appimage">تحميل لينكس (AppImage)</span>
+                                <div class="download-progress"></div>
+                            </a>
+
+                            <!-- Linux Download DEB -->
+                            <a href="https://drive.google.com/file/d/1cJw04AvdKSzCh8EXNsMlQ6_awUK4mj3L/view?usp=sharing" class="download-btn download-btn-linux-deb" id="download-deb">
+                                <i class="fas fa-box"></i>
+                                <span class="download-text" data-translate-key="btn_linux_deb">حزمة لينكس (DEB)</span>
+                                <div class="download-progress"></div>
+                            </a>
+
+                            <!-- Watch Ad / Promo Button -->
+                            <a href="https://www.zg-ziad-gamal.com/p/zg-sound.html" target="_blank" rel="noopener noreferrer" class="download-btn download-btn-watch-ad" id="btn-watch-ad">
+                                <i class="fas fa-play-circle"></i>
+                                <span class="download-text" data-translate-key="btn_watch_ad">شاهد الإعلان</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==== PROMOTIONAL POSTERS GALLERY ==== -->
+            <section class="section">
+                <div class="section-header-row">
+                    <h2 class="section-title" data-translate-key="posters_title">البوسترات والعروض الترويجية الرسمية</h2>
+                    <a href="https://www.zg-ziad-gamal.com/p/zg-sound.html" target="_blank" rel="noopener noreferrer" class="download-btn download-btn-watch-ad">
+                        <i class="fas fa-play-circle"></i>
+                        <span data-translate-key="btn_watch_ad">شاهد الإعلان</span>
+                    </a>
+                </div>
+                <div class="posters-grid">
+                    <!-- Poster 1 -->
+                    <div class="poster-item" data-img="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgDtE-alpDlmaOa3GOVt3eCMQrGC7TfJKk7Mh3MyH5J-Ci08yAOCFBTFeunJsg5pWof_zhb8McUI9sTAd6N6wdyPKRZ_OUAw0xj9U3l4zAJO00kzboqiCG4L624iBUsi0TtWUBAQKBAogSGw0ljNEJY74VBvKIyKgQYXOz9r8LyiNXow0T8MdcXmnmXupB2/s1402/01-Ancient-Rhythm.png">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgDtE-alpDlmaOa3GOVt3eCMQrGC7TfJKk7Mh3MyH5J-Ci08yAOCFBTFeunJsg5pWof_zhb8McUI9sTAd6N6wdyPKRZ_OUAw0xj9U3l4zAJO00kzboqiCG4L624iBUsi0TtWUBAQKBAogSGw0ljNEJY74VBvKIyKgQYXOz9r8LyiNXow0T8MdcXmnmXupB2/s1402/01-Ancient-Rhythm.png" alt="Ancient Rhythm">
+                        <div class="poster-caption" data-translate-key="poster_1">Ancient Rhythm - إيقاع الحضارة وعراقة الصوت</div>
+                    </div>
+
+                    <!-- Poster 2 -->
+                    <div class="poster-item" data-img="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiHDiTq6Cn_M6n5OHJ56XbVvm6fA52_o7xMTOTTG7jQ_KYaRR5IFYpTq9qQYy_-w4v_GBQZiJacQhcr7bq8Q12aszInVwR1NVwFOfreva9G_zgRgkzueHRLSdlqEB1LvkyyEPlDzV9YFeW5ORPbHbc_QY0GHx-9GV9JWTFBdFuETtqpNGAo8zWl1RXvo3MD/s1402/02-Every-Track.png">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiHDiTq6Cn_M6n5OHJ56XbVvm6fA52_o7xMTOTTG7jQ_KYaRR5IFYpTq9qQYy_-w4v_GBQZiJacQhcr7bq8Q12aszInVwR1NVwFOfreva9G_zgRgkzueHRLSdlqEB1LvkyyEPlDzV9YFeW5ORPbHbc_QY0GHx-9GV9JWTFBdFuETtqpNGAo8zWl1RXvo3MD/s1402/02-Every-Track.png" alt="Every Track">
+                        <div class="poster-caption" data-translate-key="poster_2">Every Track - دقة متناهية في كل تراك</div>
+                    </div>
+
+                    <!-- Poster 3 -->
+                    <div class="poster-item" data-img="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg4_Z1Kc1e44dY6wTVviVA0GRBSm2OTuyHWLpX9ldkTNwHRkULVthBTrm2tOp62gWJpyCmXNpdz3UEUXW1JudOFvce0_NPvgmbIt-SsZJ3JcnGiMVrA7RPGWy8TReO3jxhyX8lf5DtMvgnLOzwWlmMWRmv5CqrcObAkYXX1p95jr3HxsoC1fLapCLSiBQ9K/s1402/03-Perfect-Balance.png">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg4_Z1Kc1e44dY6wTVviVA0GRBSm2OTuyHWLpX9ldkTNwHRkULVthBTrm2tOp62gWJpyCmXNpdz3UEUXW1JudOFvce0_NPvgmbIt-SsZJ3JcnGiMVrA7RPGWy8TReO3jxhyX8lf5DtMvgnLOzwWlmMWRmv5CqrcObAkYXX1p95jr3HxsoC1fLapCLSiBQ9K/s1402/03-Perfect-Balance.png" alt="Perfect Balance">
+                        <div class="poster-caption" data-translate-key="poster_3">Perfect Balance - التوازن الصوتي الاحترافي</div>
+                    </div>
+
+                    <!-- Poster 4 -->
+                    <div class="poster-item" data-img="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjGVmdQUTdnn39dmj2GfzPy-R_lSBGZ6Ux5tJr1CjBV0ArC4OEvr4oFu00VheGvWZLuGsQ5vppdUKYz9Vo5te3aUo7tZ1vETMpDl3fJZEtTgnfX_Say3tavHV8lzQ-ffFcoNO_t2aXW_gQi-LPMZDVHHQKGVmB-ZFO1p0xv-9E3WhtgLWw3zXj5AgJmAX3t/s1402/04-Ideas-Into-Melodies.png">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjGVmdQUTdnn39dmj2GfzPy-R_lSBGZ6Ux5tJr1CjBV0ArC4OEvr4oFu00VheGvWZLuGsQ5vppdUKYz9Vo5te3aUo7tZ1vETMpDl3fJZEtTgnfX_Say3tavHV8lzQ-ffFcoNO_t2aXW_gQi-LPMZDVHHQKGVmB-ZFO1p0xv-9E3WhtgLWw3zXj5AgJmAX3t/s1402/04-Ideas-Into-Melodies.png" alt="Ideas Into Melodies">
+                        <div class="poster-caption" data-translate-key="poster_4">Ideas Into Melodies - تحويل الأفكار إلى ألحان</div>
+                    </div>
+
+                    <!-- Poster 5 -->
+                    <div class="poster-item" data-img="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgi6BW3zGAoC_XN898YEdgSYn61kx-GF1dAfS5LRO-aacol9BVJBvfUMUpLcTRb2xP_xboYDJnSoh18YfY2XQYa7qPie8ecZEmMQwLJzr92AlXV_yVGnmCAdmO8ek_1bH11HAiNT-YcUAlYiTtDF1NXNW-BFJOAXlQugpxIw7rmsNsZni1luiMmaxOihoEk/s1402/05-Your-Signature.png">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgi6BW3zGAoC_XN898YEdgSYn61kx-GF1dAfS5LRO-aacol9BVJBvfUMUpLcTRb2xP_xboYDJnSoh18YfY2XQYa7qPie8ecZEmMQwLJzr92AlXV_yVGnmCAdmO8ek_1bH11HAiNT-YcUAlYiTtDF1NXNW-BFJOAXlQugpxIw7rmsNsZni1luiMmaxOihoEk/s1402/05-Your-Signature.png" alt="Your Signature">
+                        <div class="poster-caption" data-translate-key="poster_5">Your Signature - بصمتك الصوتية الخاصة</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==== KEY HIGHLIGHTS ==== -->
+            <section class="section">
+                <h2 class="section-title" data-translate-key="features_title">أبرز المميزات والقدرات</h2>
+                <div class="features-grid">
+                    <div class="feature-box glass-card">
+                        <div class="feature-icon"><i class="fas fa-sliders-h"></i></div>
+                        <h3 data-translate-key="feat_1_title">سير عمل الاستوديو الكامل</h3>
+                        <p data-translate-key="feat_1_desc">نافذتان مخصصتان بالكامل: نافذة التحرير (Edit) ونافذة المكسر (Mix)، مع أوضاع Shuffle وSlip وSpot وGrid، وتجميع التراكات والمسارات البديلة وقوائم التشغيل ومواقع الذاكرة.</p>
+                    </div>
+
+                    <div class="feature-box glass-card">
+                        <div class="feature-icon"><i class="fas fa-volume-up"></i></div>
+                        <h3 data-translate-key="feat_2_title">وحدة مكسينج متقدمة</h3>
+                        <p data-translate-key="feat_2_desc">10 فتحات إدخال (Inserts) و10 مسارات إرسال (Sends) لكل تراك، قنوات رئيسية (Master Faders)، مسارات VCA، مجلدات توجيه، وتعويض تلقائي فائق الدقة لتأخير المؤثرات (ADC).</p>
+                    </div>
+
+                    <div class="feature-box glass-card">
+                        <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                        <h3 data-translate-key="feat_3_title">أتمتة حية متكاملة (Automation)</h3>
+                        <p data-translate-key="feat_3_desc">أوضاع أتمتة Write وTouch وLatch وTrim يتم تسجيلها مباشرة لمستوى الصوت، التوزيع (Pan)، كتم الصوت، ومسارات الإرسال، مع تحكم دقيق بكل عنصر في المؤثرات.</p>
+                    </div>
+
+                    <div class="feature-box glass-card">
+                        <div class="feature-icon"><i class="fas fa-music"></i></div>
+                        <h3 data-translate-key="feat_4_title">محرر MIDI والنوتة الموسيقية</h3>
+                        <p data-translate-key="feat_4_desc">بيانو رول تفاعلي مع خطوط لشدة العزف (Velocity)، إدخال خطوة بخطوة، تصحيح التوقيت (Quantize)، محرر نوتة موسيقية كلاسيكية، وتقنية متطورة لتحويل الصوت إلى MIDI.</p>
+                    </div>
+
+                    <div class="feature-box glass-card">
+                        <div class="feature-icon"><i class="fas fa-headphones"></i></div>
+                        <h3 data-translate-key="feat_5_title">صوت محيطي 9.1.6 ومزامنة الفيديو</h3>
+                        <p data-translate-key="feat_5_desc">توزيع صوتي محيطي ثلاثي الأبعاد يصل إلى 9.1.6 ومحاكاة فورية لمكبرات الصوت وسماعات الرأس، مع شريط فيديو مخصص متزامن مع مؤشر التشغيل للمكساج السينمائي.</p>
+                    </div>
+
+                    <div class="feature-box glass-card">
+                        <div class="feature-icon"><i class="fas fa-microchip"></i></div>
+                        <h3 data-translate-key="feat_6_title">محرك فائق السرعة وخفيف الوزن</h3>
+                        <p data-translate-key="feat_6_desc">محرك نقي يعالج الصوت بدقة رياضية وتأخير يقارب الصفر (Sub-millisecond latency) دون استهلاك موارد الجهاز ودون خطر الانهيارات المفاجئة أثناء الجلسات الضخمة.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==== SCREENSHOTS GALLERY ==== -->
+            <section class="section">
+                <h2 class="section-title" data-translate-key="screenshots_title">لقطات الشاشة الرسمية</h2>
+                <div class="gallery">
+                    <div class="gallery-item" data-img="https://soundcraft.run/shots/edit.webp">
+                        <img src="https://soundcraft.run/shots/edit.webp" alt="Edit Window">
+                        <div class="gallery-caption" data-translate-key="shot_1">نافذة التحرير وترتيب المسارات الصوتية والـ MIDI</div>
+                    </div>
+                    <div class="gallery-item" data-img="https://soundcraft.run/shots/mix.webp">
+                        <img src="https://soundcraft.run/shots/mix.webp" alt="Mix Console">
+                        <div class="gallery-caption" data-translate-key="shot_2">وحدة المكسينج الكاملة، الفيدرات ومسارات الإرسال</div>
+                    </div>
+                    <div class="gallery-item" data-img="https://soundcraft.run/shots/midi.webp">
+                        <img src="https://soundcraft.run/shots/midi.webp" alt="Piano-roll MIDI">
+                        <div class="gallery-caption" data-translate-key="shot_3">محرر الـ MIDI التفاعلي ومسار قوة الضربات (Velocity)</div>
+                    </div>
+                    <div class="gallery-item" data-img="https://soundcraft.run/shots/automation.webp">
+                        <img src="https://soundcraft.run/shots/automation.webp" alt="Live Automation">
+                        <div class="gallery-caption" data-translate-key="shot_4">منحنيات الأتمتة الحية ونقاط التحكم بالباراميترات</div>
+                    </div>
+                    <div class="gallery-item" data-img="https://soundcraft.run/shots/surround.webp">
+                        <img src="https://soundcraft.run/shots/surround.webp" alt="Surround Sound">
+                        <div class="gallery-caption" data-translate-key="shot_5">توزيع الصوت المحيطي الموضعي 9.1.6 ومحاكي مكبرات الصوت</div>
+                    </div>
+                    <div class="gallery-item" data-img="https://soundcraft.run/shots/score.webp">
+                        <img src="https://soundcraft.run/shots/score.webp" alt="Score Notation">
+                        <div class="gallery-caption" data-translate-key="shot_6">محرر النوتة الموسيقية وعرض السكور للطباعة والتصدير</div>
+                    </div>
+                    <div class="gallery-item" data-img="https://soundcraft.run/shots/video.webp">
+                        <img src="https://soundcraft.run/shots/video.webp" alt="Video Sync">
+                        <div class="gallery-caption" data-translate-key="shot_7">مسار الفيديو المتزامن مع مؤشر التشغيل للمكساج للأفلام</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==== DETAILED SPECIFICATIONS & DESCRIPTION ==== -->
+            <section class="section">
+                <div class="description-card glass-card">
+                    <h2 class="section-title" data-translate-key="desc_title">الوصف الشامل لـ ZG Sound</h2>
+                    <div id="full-description-text" data-translate-key="detailed_description">
+                        <!-- Dynamic Translated Content Injected Here -->
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- ==== GLOBAL FOOTER ==== -->
+    <footer class="app-footer">
+        <a href="https://www.zg-ziad-gamal.com/" target="_blank" rel="noopener noreferrer">
+            All Right Reserved Copyright © ZG ZIAD GAMAL
+        </a>
+        <p data-translate-key="footer_powered">يعمل بواسطة ZG SERVER</p>
+    </footer>
+
+    <!-- ==== ABOUT MODAL ==== -->
+    <div id="about-modal-overlay" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 data-translate-key="about_modal_title">حول المطور</h2>
+                <button class="modal-close-btn">×</button>
+            </div>
+            <div id="about-modal-body" class="modal-body">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiY8msPmxWaVYd-R35MDAS-7GnZhFFVjdU9SGXu2Ip53tU_LW7FYAvbaN7wQLj3tgTUuPIpxrXTfj1xkhe0rMk8EKzd5lqD419nvrj7R3TGlu0gTngDS3YUzHWDR3WB_djZkj1X635zwlkTw51ygun3-7h9UeMHiuvk1-GQ0djow_ViDR11lqn2x3K33xK8/s320/502463702_2856417251209619_8434838307459497445_n.jpg" alt="Ziad Gamal" class="profile-pic">
+                <h3 data-translate-key="about_name">زياد جمال شوقي محمد محمد يوسف</h3>
+                <h4 data-translate-key="about_dob">تاريخ الميلاد: 23/1/2003</h4>
+                <div class="info-section">
+                    <h5 data-translate-key="about_skills_title">القدرات</h5>
+                    <p data-translate-key="about_skill_1">إنشاء وتطوير مواقع الويب.</p>
+                    <p data-translate-key="about_skill_2">إنتاج فيديوهات موشن جرافيك مع تعليق صوتي بلهجات متعددة.</p>
+                    <p data-translate-key="about_skill_3">تصميم برامج اندرويد و برامج للكمبيوتر مثل ZG ZEZO APPS و ZGPT وغيرها.</p>
+                </div>
+                <div class="info-section">
+                    <h5 data-translate-key="about_experience_title">أبرز الأعمال</h5>
+                    <p data-translate-key="about_exp_1">العمل مع شركة الدار العربي السعودية (19/5/2019).</p>
+                    <p data-translate-key="about_exp_2">المشاركة في مشروع القرآن العظيم وتطوير برامج للأندرويد والآيفون.</p>
+                    <p data-translate-key="about_exp_3">تصميم صور لـ GAMES 2EGYPT.</p>
+                    <p data-translate-key="about_exp_5">أحد المشاركين في مشاريع شركة Huawei.</p>
+                </div>
+                <div class="info-section">
+                    <h5 data-translate-key="about_projects_title">مشاريعي</h5>
+                    <div class="projects-grid">
+                        <div class="project-card"><a href="https://www.zg-ziad-gamal.com/2022/09/2312023-coming-soon-on-01232023-2023-1.html" target="_blank" rel="noopener noreferrer"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiru3mgkldKe9Vuwg3DrzDvya06O_lh0TJprBCtf_AkhFUzOudLf_JCksoK-jLoneCr8eIBi6apuGHXYqaCTB4FpHnP7nBYncouwr-KbBFiFPcRLacy8IC0-hVIRRI-iA7vLVKAZYFYlQua/w265-h149/Screenshot+2022-04-20+230228.png" alt="Zezo Apps"></a></div>
+                        <div class="project-card"><a href="https://www.zg-ziad-gamal.com/p/zg-academy.html" target="_blank" rel="noopener noreferrer"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjdgPBuecwmCGT3iLzFRbDS7IZiz0kPvgy2puQfo7atyw0UFVhCNxIORaDX0uR1ZpM2UMc9KAswbUEQECJMMbYdzQKU4U2b77TOYs3gDH0wpMoA7FNnERjMlsWGdot26V-2VE7MnSt-7tD6cbEpgp-rhHh8ER61Q0nCKv0IWt-eUDypPuPJdh1XNvtXJf4/s320/1693185773962.png" alt="ZG ACADEMY"></a></div>
+                        <div class="project-card"><a href="https://www.zg-ziad-gamal.com/" target="_blank" rel="noopener noreferrer"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjI4-ZVHI7a3W47rg5IssbHBYFa0ISdZHDXi607t139mmGqFAWiFCzm_VtIIr9sjUoki72WF9FCz6uIDx49Mu_e82-3MXI7zUyyGhnZjZ9VSbnjT2mdLHYx9TYU2P1_yVnbC27bUEX3Qs9B63lsjhi84ir2T41lTyfR3OHDZnEuHbjwNN86__0KB2lDjJsg/s320/WhatsApp%20Image%202025-05-30%20at%201.46.14%20PM.png" alt="ZG WEB"></a></div>
+                    </div>
+                </div>
+                <div class="info-section">
+                    <h5 data-translate-key="about_certs_title">الشهادات المعتمدة</h5>
+                    <div class="certs-grid">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjgh5WE5xJh7aRQHuoowFnN9XRDm0JTX2OE0qmB27B4DsScJAAw4HNFJWKfF-FLFcoFaNBX9BP6K8OdGv25ADXYTVzI5Z1W5NwXOItflBeIxHYZJ9otUJDGgzxEl8DoNhyK5-VGqgNyN4oVg4tg3oe0Fd7xQau67us8Rg9E8wreaN7csWJHMmXLJWdZJ3sx/w252-h252/university-of-oxford-badge-logo.png" alt="Oxford">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg5FwgLgDDYFHCjP9gYUlrQOSGgS8I2EoYwOdFREipA_rPuMp-GxsdumuF74QleqcIP2adDlnKmSa03CXPKbhGTbaqb2jchO0kuyTDg8L3gQ2OjDqy0cHV3w-9Gu_-jX9nXj4CVejhs8hyphenhyphenzJgUQWLWW0AOwIoi7l9THGbuyQ5yhNwOoi7MPLzSb0CAh6is/s320/673468.png" alt="Company 1">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjH8CaE20YHoSwd2tDRb2uh3QT9_fhxdGv0pfvRh4qoXw_wr_B6fMJLHF6OSszTD5y2BUSfTkwQx5lw7UMFUiEIsqUqU7i4z203NKC9wcTAYhRf5r4BD1xiMucTqG5vrjYQ25Ap4ITQU57zpqPBYHO2L30VNG7Hq-rdcE65G_bT1iq197_M4EO3kxogf0Q/w168-h168/882726.png" alt="Company 2">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhPycIR_qdGEwozH0r5pKm8SXFBEL1jUi3rl8qFstPkn9P-UXxWEKotMorH5gNSs_uUy0eoqfz71TK_iheKx6BfePKw8TAIy6MWF_9saoAbZSHZYikV0eAx8BREPsvXZZsvZLAn5TrPBf1qFy8r57wMMEOAiRZPamuLPkWSFmXoxZqjcBNcP0iAW-3YDK0/w152-h152/882749.png" alt="Company 3">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiPVXpjGMML7_Qj-2c-a3KOybMzdB9T4SFzYI0hL9EYgvj6WS_7WpIbDX-27y2eGTmNUbWGgGgKqBeWH42XpHQ8GR_UtF8tvl9vKZHQQmuyH7fZQ4lex9Sd-N2URxGrqa8HTbp9Oh5bckOKNUIVxgRiTn9y42QKWgG1mw_wD4te5erdrO3o7YOBVi3i-cE/w211-h211/7611770.png" alt="Company 4">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEioC4aVpzDV0C9WMQk7yiqT75FsA61aj-OiGFrPOgNlEwlNBQl9o5pwLTpuP1MkAPDKxPMphhlXB2g46Ddw3z0IjwBxBsAHlvwCWJkl1wUIzSz9pqjmJ_xrjJEIfnR0yhtlvF7a2Ya7Yx-s_p-d9VDpwxtcy2fxE7p3FNq7eCejabIDEFKv5enHhCMkvQg/w179-h179/amazon-1331550885972433276.png" alt="Amazon">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj3ekp13xqwuXwELEvGxtaFbxdX_E6CNmG2zdElPyqTxtn3HaG-bBNVH8vfvr9Me9AMp1G3OOgfu8iFPws3_qG0j2Zo_SJYpSalIflVaL_cXF3XnVgIXpbSfMrqlvpKtgBDacAJD_5Ng8jg7k9JtogS3BkcirIgBZO0TdvzLWvL7f41zqNXoBKrIdIgX7o/s1600/free-microsoft-1868944-1583108.webp" alt="Microsoft">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg0OtMPrjKxPy25LTD3NlXj1lO18LGRphI5HfnvZNysgj4sUhwrFjeq3-ye7Nwk4cl35F65VWYN95KjYT8qm4D9suqENqnt4u3vUXlK1nqcsAuOJ9kz1tr7pNlCJvSg_Hg8KaFjPHZjNogTA4Oqpr1xpiA5MQ45rmd_cpt4NxIKyATVjFNqm4wnlhJU5aaS/w234-h234/882738.png" alt="Company 5">
+                    </div>
+                </div>
+                <div class="info-section">
+                    <h5 data-translate-key="about_contact_title">للتواصل والأعمال</h5>
+                    <p><strong>Email:</strong> zgzezoapps@gmail.com</p>
+                    <div class="social-card">
+                        <center>
+                          <div class="profileimage">
+                            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgWOkKWcrjfXetBqFUfU6YnHpqUS5xeGP5mcGoGliJbtghkSmBavoXlNipoLf_LFGSjUU2mkZ3FeUotucktqKIVmKj7WekWjFk7NdU_z_ZAnZDyyvdIn2MMvq4D0rbimXcXz5X3ZkCoYcE6ggwt-gRHrX9Iptyb0O6jA3Y8Gwh6a8Ir0f_zlUxJwUaZL05E/s1280/snapedit_1741900259898.png" alt="ZIAD GAMAL" />
+                          </div>
+                          <div class="Name"><p>ZIAD GAMAL</p></div>
+                          <div class="socialbar">
+                            <a id="facebook" href="https://www.facebook.com/ziad.ziad.75641" target="_blank"><svg viewbox="0 0 16 16" fill="currentColor" height="16" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z"></path></svg></a>
+                            <a id="instagram" href="https://www.instagram.com/zg_ziad_gamal/" target="_blank"><svg viewbox="0 0 16 16" fill="currentColor" height="16" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334z"></path></svg></a>
+                            <a id="whatsapp" href="https://api.whatsapp.com/send/?phone=201202377778" target="_blank"><svg viewbox="0 0 16 16" fill="currentColor" height="16" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.05-.084-.182-.133-.38-.232z"></path></svg></a>
+                            <a id="telegram" href="https://t.me/ZG_ZIAD" target="_blank"><svg viewbox="0 0 16 16" fill="currentColor" height="16" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.287 5.906c-.778.324-2.334.994-4.666 2.01-.378.15-.577.298-.595.442-.03.243.275.339.69.47l.175.055c.408.133.958.288 1.243.294.26.006.549-.1.868-.32 2.179-1.471 3.304-2.214 3.374-2.23.05-.012.12-.026.166.016.047.041.042.12.037.141-.03.129-1.227 1.241-1.846 1.817-.193.18-.33.307-.358.336a8.154 8.154 0 0 1-.188.186c-.38.366-.664.64.015 1.088.327.216.589.393.85.571.284.194.568.387.936.629.093.06.183.125.27.187.331.236.63.448.997.414.214-.02.435-.22.547-.82.265-1.417.786-4.486.906-5.751a1.426 1.426 0 0 0-.013-.315.337.337 0 0 0-.114-.217.526.526 0 0 0-.31-.093c-.3.005-.763.166-2.984 1.09z"></path></svg></a>
+                            <a id="youtube" href="https://www.youtube.com/channel/UCr9pR-04MZEr96VteNBlQ" target="_blank"><svg viewbox="0 0 16 16" fill="currentColor" height="16" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.007 2.007 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.007 2.007 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31.4 31.4 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.007 2.007 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A99.788 99.788 0 0 1 7.858 2h.193zM6.4 5.209v4.818l4.157-2.408L6.4 5.209z"></path></svg></a>
+                          </div>
+                        </center>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary modal-close-btn" data-translate-key="close">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==== PRIVACY POLICY MODAL ==== -->
+    <div id="privacy-modal-overlay" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 data-translate-key="privacy_modal_title">سياسة الخصوصية</h2>
+                <button class="modal-close-btn">×</button>
+            </div>
+            <div id="privacy-modal-body" class="modal-body" data-translate-key="privacy_policy_content">
+                <!-- Content will be injected dynamically -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary modal-close-btn" data-translate-key="close">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==== SETTINGS MODAL ==== -->
+    <div id="settings-modal-overlay" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 data-translate-key="settings_title">الإعدادات والمظهر</h2>
+                <button class="modal-close-btn">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-section">
+                    <h4 data-translate-key="settings_primary_color_title">تخصيص المظهر</h4>
+                    <div class="setting-item">
+                        <label data-translate-key="settings_primary_color_label">اللون الأساسي (العناوين والأزرار)</label>
+                        <input type="color" id="primary-color-picker">
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h4 data-translate-key="settings_background_title">ألوان الخلفية الحية</h4>
+                    <div class="setting-item">
+                        <label data-translate-key="settings_light_start">لون البداية (فاتح)</label>
+                        <input type="color" id="light-start-color-picker">
+                    </div>
+                    <div class="setting-item">
+                        <label data-translate-key="settings_light_end">لون النهاية (فاتح)</label>
+                        <input type="color" id="light-end-color-picker">
+                    </div>
+                    <hr style="border: 1px solid var(--glass-border); margin: 15px 0;">
+                    <div class="setting-item">
+                        <label data-translate-key="settings_dark_start">لون البداية (داكن)</label>
+                        <input type="color" id="dark-start-color-picker">
+                    </div>
+                    <div class="setting-item">
+                        <label data-translate-key="settings_dark_end">لون النهاية (داكن)</label>
+                        <input type="color" id="dark-end-color-picker">
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h4 data-translate-key="settings_animation_title">التحكم في الحركة</h4>
+                    <div class="setting-item">
+                        <label data-translate-key="settings_toggle_animation">تشغيل الخلفية المتحركة</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="animation-toggle-switch" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h4 data-translate-key="settings_reset_title">إعادة التعيين</h4>
+                    <div class="setting-item">
+                        <p data-translate-key="settings_reset_desc" style="flex-grow: 1; opacity: 0.8; font-size: 0.9em;">استعادة كافة الإعدادات والسمات الأصلية.</p>
+                        <button id="reset-settings-btn" class="btn btn-danger" data-translate-key="settings_reset_button">إعادة تعيين الكل</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==== SERVICES MODAL ==== -->
+    <div id="services-modal-overlay" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 data-translate-key="services_modal_title">خدماتنا وتطبيقاتنا</h2>
+                <button class="modal-close-btn">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="services-list">
+                    <a href="https://www.zg-ziad-gamal.com/p/zgpt.html" target="_blank" rel="noopener noreferrer" class="service-link">
+                        <i class="fas fa-brain"></i>
+                        <span>ZGPT</span>
+                    </a>
+                    <a href="https://www.zg-ziad-gamal.com/p/zg-doc.html" target="_blank" rel="noopener noreferrer" class="service-link">
+                        <i class="fas fa-file-word"></i>
+                        <span>ZG DOC</span>
+                    </a>
+                    <a href="https://www.zg-ziad-gamal.com/p/zg-slide.html" target="_blank" rel="noopener noreferrer" class="service-link">
+                        <i class="fas fa-file-powerpoint"></i>
+                        <span>ZG SLIDE</span>
+                    </a>
+                    <a href="https://www.zg-ziad-gamal.com/p/zg-code.html" target="_blank" rel="noopener noreferrer" class="service-link">
+                        <i class="fas fa-file-code"></i>
+                        <span>ZG CODE</span>
+                    </a>
+                    <a href="https://www.zg-ziad-gamal.com/p/zg-converter.html" target="_blank" rel="noopener noreferrer" class="service-link">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span>ZG CONVERTER</span>
+                    </a>
+                    <a href="https://www.zg-ziad-gamal.com/p/zg-studio-root-primary-color-007bff_20.html" target="_blank" rel="noopener noreferrer" class="service-link">
+                        <i class="fas fa-camera-retro"></i>
+                        <span>ZG PHOTO</span>
+                    </a>
+                    <a href="https://www.zg-ziad-gamal.com/p/zg-video.html" target="_blank" rel="noopener noreferrer" class="service-link">
+                        <i class="fas fa-film"></i>
+                        <span>ZG VIDEO</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==== IMAGE PREVIEW MODAL ==== -->
+    <div id="image-modal-overlay" class="modal-overlay">
+        <div class="image-modal-content">
+            <button id="image-modal-close-btn" class="modal-close-btn">×</button>
+            <img id="modal-image" src="" alt="Screenshot Full Preview">
+        </div>
+    </div>
+
+    <!-- ==== SCRIPTS ==== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggleButton = document.getElementById('theme-toggle-btn');
+            const htmlTag = document.documentElement;
+            const body = document.body;
+            const langButtons = { ar: document.getElementById('lang-ar'), en: document.getElementById('lang-en'), zh: document.getElementById('lang-zh') };
+
+            // Modals
+            const servicesToggleBtn = document.getElementById('services-toggle-btn');
+            const aboutToggleBtn = document.getElementById('about-toggle-btn');
+            const privacyToggleBtn = document.getElementById('privacy-toggle-btn');
+            const settingsToggleBtn = document.getElementById('settings-toggle-btn');
+            const servicesModal = document.getElementById('services-modal-overlay');
+            const aboutModal = document.getElementById('about-modal-overlay');
+            const privacyModal = document.getElementById('privacy-modal-overlay');
+            const settingsModal = document.getElementById('settings-modal-overlay');
+            const imageModal = document.getElementById('image-modal-overlay');
+            const modalImage = document.getElementById('modal-image');
+            const modalCloseBtns = document.querySelectorAll('.modal-close-btn');
+
+            // Settings Inputs
+            const primaryColorPicker = document.getElementById('primary-color-picker');
+            const lightStartColorPicker = document.getElementById('light-start-color-picker');
+            const lightEndColorPicker = document.getElementById('light-end-color-picker');
+            const darkStartColorPicker = document.getElementById('dark-start-color-picker');
+            const darkEndColorPicker = document.getElementById('dark-end-color-picker');
+            const animationToggle = document.getElementById('animation-toggle-switch');
+            const resetSettingsBtn = document.getElementById('reset-settings-btn');
+
+            // Gallery & Poster Items Lightbox
+            const mediaItems = document.querySelectorAll('.gallery-item, .poster-item');
+
+            // Download Buttons (Filtered to exclude external link)
+            const downloadButtons = [
+                document.getElementById('download-win'),
+                document.getElementById('download-linux'),
+                document.getElementById('download-deb')
+            ];
+
+            // Translations Dictionary
+            const translations = {
+                ar: {
+                    page_title: "ZG Sound - محطة العمل الصوتية الرقمية الاحترافية",
+                    app_badge: "محطة عمل صوتية متقدمة",
+                    shortDescription: "محطة عمل صوتية رقمية (DAW) فائقة السرعة بنيت بتقنيات حديثة لتقديم أداء استثنائي وتأخير شبه معدوم. تم تصميمها لتسجيل وهندسة وتوزيع الصوت والموسيقى باحترافية كاملة مع واجهات تحرير وميكسينج مستقلة ودعم كامل للصوت المحيطي والـ MIDI.",
+                    motto_note: "معاً لاستقلال مصر الرقمي - أداء صوتي استثنائي بأحدث التقنيات الحديثة",
+                    btn_win: "تحميل للويندوز (MSI x64)",
+                    btn_linux_appimage: "تحميل لينكس (AppImage)",
+                    btn_linux_deb: "حزمة لينكس (DEB)",
+                    btn_watch_ad: "شاهد الإعلان",
+                    posters_title: "البوسترات والعروض الترويجية الرسمية",
+                    poster_1: "Ancient Rhythm - إيقاع الحضارة وعراقة الصوت",
+                    poster_2: "Every Track - دقة متناهية في كل تراك",
+                    poster_3: "Perfect Balance - التوازن الصوتي الاحترافي",
+                    poster_4: "Ideas Into Melodies - تحويل الأفكار إلى ألحان",
+                    poster_5: "Your Signature - بصمتك الصوتية الخاصة",
+                    features_title: "أبرز المميزات والقدرات",
+                    feat_1_title: "سير عمل الاستوديو الكامل",
+                    feat_1_desc: "نافذتان مخصصتان بالكامل: نافذة التحرير (Edit) ونافذة المكسر (Mix)، مع أوضاع Shuffle وSlip وSpot وGrid، وتجميع التراكات والمسارات البديلة وقوائم التشغيل ومواقع الذاكرة.",
+                    feat_2_title: "وحدة مكسينج متقدمة",
+                    feat_2_desc: "10 فتحات إدخال (Inserts) و10 مسارات إرسال (Sends) لكل تراك، قنوات رئيسية (Master Faders)، مسارات VCA، مجلدات توجيه، وتعويض تلقائي فائق الدقة لتأخير المؤثرات (ADC).",
+                    feat_3_title: "أتمتة حية متكاملة (Automation)",
+                    feat_3_desc: "أوضاع أتمتة Write وTouch وLatch وTrim يتم تسجيلها مباشرة لمستوى الصوت، التوزيع (Pan)، كتم الصوت، ومسارات الإرسال، مع تحكم دقيق بكل عنصر في المؤثرات.",
+                    feat_4_title: "محرر MIDI والنوتة الموسيقية",
+                    feat_4_desc: "بيانو رول تفاعلي مع خطوط لشدة العزف (Velocity)، إدخال خطوة بخطوة، تصحيح التوقيت (Quantize)، محرر نوتة موسيقية كلاسيكية، وتقنية متطورة لتحويل الصوت إلى MIDI.",
+                    feat_5_title: "صوت محيطي 9.1.6 ومزامنة الفيديو",
+                    feat_5_desc: "توزيع صوتي محيطي ثلاثي الأبعاد يصل إلى 9.1.6 ومحاكاة فورية لمكبرات الصوت وسماعات الرأس، مع شريط فيديو مخصص متزامن مع مؤشر التشغيل للمكساج السينمائي.",
+                    feat_6_title: "محرك فائق السرعة وخفيف الوزن",
+                    feat_6_desc: "محرك نقي يعالج الصوت بدقة رياضية وتأخير يقارب الصفر (Sub-millisecond latency) دون استهلاك موارد الجهاز ودون خطر الانهيارات المفاجئة أثناء الجلسات الضخمة.",
+                    screenshots_title: "لقطات الشاشة الرسمية",
+                    shot_1: "نافذة التحرير وترتيب المسارات الصوتية والـ MIDI",
+                    shot_2: "وحدة المكسينج الكاملة، الفيدرات ومسارات الإرسال",
+                    shot_3: "محرر الـ MIDI التفاعلي ومسار قوة الضربات (Velocity)",
+                    shot_4: "منحنيات الأتمتة الحية ونقاط التحكم بالباراميترات",
+                    shot_5: "توزيع الصوت المحيطي الموضعي 9.1.6 ومحاكي مكبرات الصوت",
+                    shot_6: "محرر النوتة الموسيقية وعرض السكور للطباعة والتصدير",
+                    shot_7: "مسار الفيديو المتزامن مع مؤشر التشغيل للمكساج للأفلام",
+                    desc_title: "الوصف الشامل لـ ZG Sound",
+                    detailed_description: `
+                        <p><strong>ZG Sound</strong> هي محطة العمل الصوتية الرقمية الشاملة والمصممة لتمنح مهندسي الصوت، والملحنين، والموزعين الموسيقيين، وصناع المحتوى بيئة إنتاج صوتي احترافية متكاملة تواكب أعلى المعايير العالمية في استوديوهات الصوت.</p>
+                        
+                        <h3>🔹 بنية استوديو الصوت المزدوجة (Dual Studio Architecture):</h3>
+                        <ul>
+                            <li><strong>نافذة التحرير المخصصة (Edit Window):</strong> تتيح ترتيب المقاطع، وتقطيع الصوت، ومعالجة المنحنيات (Fades)، والتبديل السريع بين الأدوات الذكية (Smart Tool, Grabber, Trimmer).</li>
+                            <li><strong>أوضاع التحرير الأربعة:</strong> تحكم كامل عبر أوضاع (Shuffle, Slip, Spot, Grid) لتناسب الدقة المطلوبة في ترتيب الإيقاعات أو التسجيل الحر.</li>
+                            <li><strong>نافذة المكسر المتكاملة (Mix Window):</strong> صفوف فيدرات احترافية تتيح التحكم الدقيق في المستويات ومسارات الإدخال والإخراج.</li>
+                        </ul>
+
+                        <h3>🔹 هندسة الميكساج وقوة التوجيه (Console & Routing):</h3>
+                        <ul>
+                            <li>10 خانات إدخال (Inserts) و10 مسارات إرسال (Sends) لكل تراك دون قيود.</li>
+                            <li>دعم كامل لمسارات VCA ومسارات التحكم الفرعية وقنوات الأوكس (Aux Inputs) ومجلدات التوجيه المدمجة (Routing Folders).</li>
+                            <li>نظام تعويض التأخير التلقائي للمؤثرات (Automatic Delay Compensation - ADC) لضمان اتساق الطور الزمني بدقة متناهية.</li>
+                            <li>عدادات قياس احترافية مع ميزة الاحتفاظ بالقمة (Peak Hold) ومراقبة مستويات RMS.</li>
+                        </ul>
+
+                        <h3>🔹 محرك الـ MIDI وتأليف الموسيقى:</h3>
+                        <ul>
+                            <li>بيانو رول عالي الدقة مع تعديل السرعة والشدة (Velocity) وانحناء النغمة (Pitch Bend).</li>
+                            <li>محرر النوتة الموسيقية المتكامل (Score Notation) لقراءة وطباعة النوتات وتصديرها بصيغة MusicXML.</li>
+                            <li>محرك ذكي لتحويل الترددات الصوتية المسجلة إلى إشارات MIDI قابلة للتعديل (Audio-to-MIDI).</li>
+                        </ul>
+
+                        <h3>🔹 الصوت المحيطي 9.1.6 والإنتاج المرئي:</h3>
+                        <ul>
+                            <li>دعم أنظمة الصوت المجسم والمحيطي حتى 9.1.6 و 7.1.4 لتوزيع الآلات في الفضاء الصوتي ثلاثي الأبعاد.</li>
+                            <li>مسار فيديو مخصص (Dedicated Video Track) يتيح استيراد وعرض الفيديو في الوقت الفعلي متزامناً بالمللي ثانية مع مؤشر التشغيل، مما يجعله الحل الأمثل لهندسة المؤثرات الصوتية والموسيقى التصويرية للأفلام.</li>
+                        </ul>
+
+                        <h3>🔹 التوافقية ومحرك المعالجة:</h3>
+                        <ul>
+                            <li><strong>محرك حديث فائق السرعة:</strong> استجابة لحظية في المكسينج المباشر وبث الصوت.</li>
+                            <li><strong>تسريع رسومي:</strong> توافق مباشر مع DirectX 12 و Metal و Vulkan.</li>
+                            <li><strong>الصيغ المدعومة:</strong> استيراد وتصدير WAV, BWF, RF64, FLAC, AIFF, MP3, AAC والمزيد.</li>
+                        </ul>
+                    `,
+                    footer_powered: "يعمل بواسطة ZG SERVER",
+                    about_modal_title: "حول المطور",
+                    about_name: "زياد جمال شوقي محمد محمد يوسف",
+                    about_dob: "تاريخ الميلاد: 23/1/2003",
+                    about_skills_title: "القدرات",
+                    about_skill_1: "إنشاء وتطوير مواقع الويب.",
+                    about_skill_2: "إنتاج فيديوهات موشن جرافيك مع تعليق صوتي بلهجات متعددة.",
+                    about_skill_3: "تصميم برامج اندرويد و برامج للكمبيوتر مثل ZG ZEZO APPS و ZGPT وغيرها.",
+                    about_experience_title: "أبرز الأعمال",
+                    about_exp_1: "العمل مع شركة الدار العربي السعودية (19/5/2019).",
+                    about_exp_2: "المشاركة في مشروع القرآن العظيم وتطوير برامج للأندرويد والآيفون.",
+                    about_exp_3: "تصميم صور لـ GAMES 2EGYPT.",
+                    about_exp_5: "أحد المشاركين في مشاريع شركة Huawei.",
+                    about_projects_title: "مشاريعي",
+                    about_certs_title: "الشهادات المعتمدة",
+                    about_contact_title: "للتواصل والأعمال",
+                    close: "إغلاق",
+                    settings_title: "الإعدادات والمظهر",
+                    settings_primary_color_title: "تخصيص المظهر",
+                    settings_primary_color_label: "اللون الأساسي (العناوين والأزرار)",
+                    settings_background_title: "ألوان الخلفية الحية",
+                    settings_light_start: "لون البداية (فاتح)",
+                    settings_light_end: "لون النهاية (فاتح)",
+                    settings_dark_start: "لون البداية (داكن)",
+                    settings_dark_end: "لون النهاية (داكن)",
+                    settings_animation_title: "التحكم في الحركة",
+                    settings_toggle_animation: "تشغيل الخلفية المتحركة",
+                    settings_reset_title: "إعادة التعيين",
+                    settings_reset_desc: "استعادة كافة الإعدادات والسمات الأصلية.",
+                    settings_reset_button: "إعادة تعيين الكل",
+                    services_modal_title: "خدماتنا وتطبيقاتنا",
+                    privacy_modal_title: "سياسة الخصوصية",
+                    privacy_policy_content: `
+                        <p>في ZG Sound و ZG STORE، نضع خصوصية المستخدمين في أعلى أولوياتنا. توضح هذه السياسة كيف نتعامل مع بياناتك:</p>
+                        <h3>1. معالجة محلية كاملة للبيانات</h3>
+                        <p>يعمل ZG Sound محلياً على جهاز الكمبيوتر الخاص بك. لا يتم نقل أي من جلساتك الصوتية أو ملفات الموسيقى أو تسجيلاتك أو إعدادات المكسر إلى خوادم خارجية.</p>
+                        <h3>2. التخزين المحلي للتفضيلات</h3>
+                        <p>يتم تخزين التفضيلات (المظهر، اللغة المختارة، الإعدادات المرئية) محلياً داخل متصفحك أو جهازك دون مشاركتها إطلاقاً.</p>
+                        <h3>3. أمان وحماية الملفات</h3>
+                        <p>أنت المالك الحصري لكافة المشاريع والأعمال الصوتية التي تنتجها، ويضمن التصميم المعماري عدم تسريب أي بيانات أو وسائط أثناء العمل.</p>
+                        <h3>4. التواصل والدعم</h3>
+                        <p>لأية استفسارات أو دعم فني يمكنك التواصل المباشر عبر البريد الإلكتروني: zgzezoapps@gmail.com</p>
+                    `
+                },
+                en: {
+                    page_title: "ZG Sound - Professional Digital Audio Workstation",
+                    app_badge: "PRO DAW",
+                    shortDescription: "An ultra-fast, professional Digital Audio Workstation (DAW) engineered from scratch to deliver sub-millisecond latency and uncompromising stability. Designed for tracking, editing, mixing, and mastering audio and MIDI with dedicated studio workspaces, 9.1.6 surround sound, and video sync.",
+                    motto_note: "Together for Egypt's Digital Independence - Next-Gen Audio Architecture",
+                    btn_win: "Download for Windows (MSI x64)",
+                    btn_linux_appimage: "Download for Linux (AppImage)",
+                    btn_linux_deb: "Linux Package (DEB)",
+                    btn_watch_ad: "Watch Promo Video",
+                    posters_title: "Official Promotional Artworks",
+                    poster_1: "Ancient Rhythm - Timeless Sonic Heritage",
+                    poster_2: "Every Track - Uncompromising Precision",
+                    poster_3: "Perfect Balance - Flawless Acoustic Harmony",
+                    poster_4: "Ideas Into Melodies - Transforming Inspiration",
+                    poster_5: "Your Signature - Crafting Your Distinct Sound",
+                    features_title: "Key Features & Capabilities",
+                    feat_1_title: "Full Studio Workflow",
+                    feat_1_desc: "Dedicated Edit and Mix windows, Shuffle, Slip, Spot, and Grid modes, track comping, alternate playlists, memory locations, and single-key Commands Focus navigation.",
+                    feat_2_title: "Pro Mixing Console",
+                    feat_2_desc: "Ten inserts and ten sends per track, busses, aux inputs, VCAs, routing folders, solo-in-place, and sample-accurate automatic plugin delay compensation (ADC).",
+                    feat_3_title: "Live Real-Time Automation",
+                    feat_3_desc: "Write, Touch, Latch, and Trim automation passes recorded live for volume, pan, mutes, sends, and every plugin parameter with precise breakpoint curves.",
+                    feat_4_title: "MIDI & Score Notation",
+                    feat_4_desc: "Interactive piano-roll editor with velocity lanes, step input, quantize, transposition, integrated sheet score notation editor, and Audio-to-MIDI pitch detection.",
+                    feat_5_title: "9.1.6 Surround & Video Sync",
+                    feat_5_desc: "3D spatial surround panning up to 9.1.6 with live speaker and headphone rendering, plus a dedicated picture track synchronized frame-accurately to the playhead.",
+                    feat_6_title: "Sub-Millisecond Engine",
+                    feat_6_desc: "High-performance native audio processing engine delivering instant response without bogging down system resources or crashing during heavy sessions.",
+                    screenshots_title: "Official Screenshots",
+                    shot_1: "Edit Window: Multi-track waveform arranging and MIDI sequencing",
+                    shot_2: "Full Mix Console with channel strips, inserts, and sends",
+                    shot_3: "Piano-roll MIDI editor with detailed velocity lanes",
+                    shot_4: "Live breakpoint automation curves and parameter envelopes",
+                    shot_5: "9.1.6 Surround Sound spatial panner and room renderer",
+                    shot_6: "Traditional score notation editor for viewing and printing",
+                    shot_7: "Synchronized video picture track for film scoring and sound design",
+                    desc_title: "Comprehensive ZG Sound Overview",
+                    detailed_description: `
+                        <p><strong>ZG Sound</strong> is a complete digital audio workstation built to provide sound engineers, music producers, composers, and content creators with an industry-grade environment for professional audio recording, editing, mixing, and mastering.</p>
+                        
+                        <h3>🔹 Dual Studio Architecture:</h3>
+                        <ul>
+                            <li><strong>Dedicated Edit Window:</strong> Seamless clip arranging, non-destructive editing, precision fades, and fast smart-tool manipulation.</li>
+                            <li><strong>Four Editing Modes:</strong> Full flexibility with Shuffle, Slip, Spot, and Grid modes to fit exact rhythmic alignment or loose creative tracking.</li>
+                            <li><strong>Integrated Mix Console:</strong> Tactile channel strips, master faders, and comprehensive input/output bus routing.</li>
+                        </ul>
+
+                        <h3>🔹 Mixing Architecture & Dynamic Routing:</h3>
+                        <ul>
+                            <li>10 Inserts and 10 Sends per track for expansive processing chains.</li>
+                            <li>Full support for VCAs, Aux inputs, routing folders, and implicit solo-in-place.</li>
+                            <li>Automatic Plugin Delay Compensation (ADC) ensuring phase-aligned, crystal-clear playback.</li>
+                            <li>Precision peak-hold and RMS metering on every channel strip.</li>
+                        </ul>
+
+                        <h3>🔹 MIDI Composition & Scoring Suite:</h3>
+                        <ul>
+                            <li>Piano-roll editing with velocity lanes, step input, and flexible swing quantization.</li>
+                            <li>Built-in score notation editor allowing direct sheet music generation and MusicXML export.</li>
+                            <li>Intelligent Audio-to-MIDI pitch detection algorithm for melodic and rhythmic transcribing.</li>
+                        </ul>
+
+                        <h3>🔹 9.1.6 Spatial Surround & Film Scoring:</h3>
+                        <ul>
+                            <li>Immersive audio panning up to 9.1.6 and 7.1.4 formats for cinematic and spatial music production.</li>
+                            <li>Dedicated Video Track that plays video files synchronized frame-for-frame with the timeline cursor.</li>
+                        </ul>
+
+                        <h3>🔹 Native Platform Performance:</h3>
+                        <ul>
+                            <li><strong>Hardware Acceleration:</strong> Direct GPU rendering via DirectX 12, Metal, and Vulkan.</li>
+                            <li><strong>Universal Format Support:</strong> Import and export WAV, BWF, RF64, AIFF, FLAC, MP3, AAC, and standard MIDI files.</li>
+                        </ul>
+                    `,
+                    footer_powered: "Powered by ZG SERVER",
+                    about_modal_title: "About the Developer",
+                    about_name: "Ziad Gamal Shawky Muhammad Muhammad Yusuf",
+                    about_dob: "Date of Birth: 23/1/2003",
+                    about_skills_title: "Abilities",
+                    about_skill_1: "Creating and developing websites.",
+                    about_skill_2: "Producing motion graphics videos with voice-overs in multiple dialects.",
+                    about_skill_3: "Designing Android and desktop applications (e.g., ZG ZEZO APPS, ZGPT).",
+                    about_experience_title: "Key Works",
+                    about_exp_1: "Worked with Al Dar Al Arabi Saudi Company (19/5/2019).",
+                    about_exp_2: "Participated in the Great Quran project, developing apps for Android and iPhone.",
+                    about_exp_3: "Designed graphics for GAMES 2EGYPT.",
+                    about_exp_5: "Contributor to projects at Huawei.",
+                    about_projects_title: "My Projects",
+                    about_certs_title: "Certifications",
+                    about_contact_title: "For Business & Contact",
+                    close: "Close",
+                    settings_title: "Settings & Appearance",
+                    settings_primary_color_title: "Theme Appearance",
+                    settings_primary_color_label: "Primary Accent Color",
+                    settings_background_title: "Live Background Gradients",
+                    settings_light_start: "Start Color (Light)",
+                    settings_light_end: "End Color (Light)",
+                    settings_dark_start: "Start Color (Dark)",
+                    settings_dark_end: "End Color (Dark)",
+                    settings_animation_title: "Animation Settings",
+                    settings_toggle_animation: "Enable Animated Background",
+                    settings_reset_title: "Reset",
+                    settings_reset_desc: "Reset all appearance, theme, and language customizations to defaults.",
+                    settings_reset_button: "Reset All",
+                    services_modal_title: "Our Services & Apps",
+                    privacy_modal_title: "Privacy Policy",
+                    privacy_policy_content: `
+                        <p>At ZG Sound and ZG STORE, user privacy is paramount. This policy outlines our strict privacy standards:</p>
+                        <h3>1. Complete Local Data Processing</h3>
+                        <p>ZG Sound runs entirely locally on your device. None of your audio sessions, sound files, or mixer parameters are ever sent to external servers.</p>
+                        <h3>2. Local Storage for Preferences</h3>
+                        <p>UI settings (theme, language, custom gradients) are stored solely on your device via local storage.</p>
+                        <h3>3. Project Ownership</h3>
+                        <p>You retain 100% exclusive ownership of all audio productions created using ZG Sound.</p>
+                        <h3>4. Contact</h3>
+                        <p>For inquiries or support, contact us directly at: zgzezoapps@gmail.com</p>
+                    `
+                },
+                zh: {
+                    page_title: "ZG Sound - 专业数字音频工作站",
+                    app_badge: "专业数字音频工作站",
+                    shortDescription: "一款极速、现代的专业数字音频工作站 (DAW)，旨在提供近乎零延迟的超凡性能。专为专业级音频录制、编辑、编曲、混音及母带制作而设计，具备独立的编辑与混音窗口、9.1.6 环绕声以及视频画面精确同步。",
+                    motto_note: "携手共创埃及数字独立 - 打造次世代极致音频架构",
+                    btn_win: "下载 Windows 版 (MSI x64)",
+                    btn_linux_appimage: "下载 Linux 版 (AppImage)",
+                    btn_linux_deb: "Linux 软件包 (DEB)",
+                    btn_watch_ad: "观看宣传广告",
+                    posters_title: "官方视觉宣传海报",
+                    poster_1: "Ancient Rhythm - 古老韵律与声音传承",
+                    poster_2: "Every Track - 每一个音轨的极致精度",
+                    poster_3: "Perfect Balance - 完美无瑕的声学平衡",
+                    poster_4: "Ideas Into Melodies - 将灵感转化为永恒旋律",
+                    poster_5: "Your Signature - 雕琢专属于你的声音印记",
+                    features_title: "核心功能与特性",
+                    feat_1_title: "完整录音棚级工作流",
+                    feat_1_desc: "独立的编辑 (Edit) 与混音 (Mix) 窗口，支持 Shuffle、Slip、Spot 和 Grid 四种编辑模式、轨道分层录音、备用播放列表及快速内存标记点定位。",
+                    feat_2_title: "专业调音台与信号路由",
+                    feat_2_desc: "每轨配备 10 个插入槽 (Inserts) 和 10 个辅助发送通道 (Sends)，具备总线、VCA 推子、路由文件夹以及精确至采样级别的插件延迟自动补偿 (ADC)。",
+                    feat_3_title: "多参数实时动态自动化",
+                    feat_3_desc: "支持 Write、Touch、Latch 和 Trim 自动化写入模式，实时录制音量、声像、静音、发送电平及所有插件参数的断点曲线。",
+                    feat_4_title: "MIDI 卷帘与五线谱编辑器",
+                    feat_4_desc: "交互式钢琴卷帘，配有力道 (Velocity) 调节轨、步进输入、量化、移调、传统五线谱显示排版，以及先进的音频转 MIDI 音高检测技术。",
+                    feat_5_title: "9.1.6 空间环绕声与影视对齐",
+                    feat_5_desc: "支持高达 9.1.6 和 7.1.4 的三维空间环绕声声像定位，具备扬声器及耳机模拟监听，配合专属视频轨道实现帧级精度的画面配乐同步。",
+                    feat_6_title: "亚毫秒级纯净音频引擎",
+                    feat_6_desc: "高响应底层音频计算架构，极度节省计算机系统资源，避免大型多轨工程在混音及录制过程中的意外卡顿与崩溃。",
+                    screenshots_title: "官方精选屏幕截图",
+                    shot_1: "编辑窗口：多轨音频波形排列与 MIDI 编排",
+                    shot_2: "完整混音调音台：通道条、插件槽与发送电平",
+                    shot_3: "钢琴卷帘 MIDI 编辑器与力度控制曲线",
+                    shot_4: "实时断点自动化曲线与参数包络线",
+                    shot_5: "9.1.6 空间环绕声声像定位与扬声器渲染",
+                    shot_6: "传统乐谱编辑器：五线谱生成与打印导出",
+                    shot_7: "视频画面同步轨道：影视配乐与声音设计",
+                    desc_title: "ZG Sound 深度解析",
+                    detailed_description: `
+                        <p><strong>ZG Sound</strong> 是一套功能完备的专业数字音频工作站，旨在为录音工程师、音乐制作人、作曲家以及影视配乐创作者提供一个符合现代音频工业标准的极速制作环境。</p>
+                        
+                        <h3>🔹 双工作区架构设计：</h3>
+                        <ul>
+                            <li><strong>专业编辑窗口 (Edit Window)：</strong> 支持无损音频剪辑、微调淡入淡出曲线、波形排列及智能工具一键切换。</li>
+                            <li><strong>四种编辑对齐模式：</strong> 灵活切换 Shuffle、Slip、Spot、Grid 模式，轻松满足自由录音或高精度节奏对齐需求。</li>
+                            <li><strong>专业混音台 (Mix Window)：</strong> 具备手感出色的通道推子、声像旋钮、电平峰值保持与 RMS 实时监测。</li>
+                        </ul>
+
+                        <h3>🔹 强大的调音台与灵活路由：</h3>
+                        <ul>
+                            <li>每条音轨配备 10 个插入槽与 10 个发送槽，支持复杂的串并联效果链。</li>
+                            <li>完全支持 VCA 编组、辅助输入通道 (Aux)、总线文件夹 (Routing Folders) 以及独立监听。</li>
+                            <li>高精度的插件延迟自动补偿机制 (ADC)，彻底杜绝多轨相位抵消失真。</li>
+                        </ul>
+
+                        <h3>🔹 MIDI 制作与五线谱排版：</h3>
+                        <ul>
+                            <li>高精度钢琴卷帘界面，支持微调音符力度、音高弯音 (Pitch Bend) 与调制参数。</li>
+                            <li>内置五线谱编辑系统，支持生成规范乐谱并直接导出为 MusicXML 格式。</li>
+                            <li>智能音频转 MIDI 功能，可将录制的人声或乐器旋律快速转换为可编辑的 MIDI 音符。</li>
+                        </ul>
+
+                        <h3>🔹 9.1.6 空间音频与影视同步配乐：</h3>
+                        <ul>
+                            <li>支持 9.1.6、7.1.4 等多通道空间三维环绕声混音定位，打造沉浸式全景声场。</li>
+                            <li>配备专属视频轨道，精准同步播放视频画面，为影视后期制作、动漫游戏配音提供极致体验。</li>
+                        </ul>
+
+                        <h3>🔹 原生跨平台与硬件加速：</h3>
+                        <ul>
+                            <li><strong>图形加速：</strong> 深度调用 DirectX 12、Metal 与 Vulkan 进行流畅渲染。</li>
+                            <li><strong>主流格式广泛支持：</strong> 支持导入与导出 WAV、BWF、RF64、FLAC、AIFF、MP3、AAC 等格式。</li>
+                        </ul>
+                    `,
+                    footer_powered: "由 ZG SERVER 提供支持",
+                    about_modal_title: "关于开发者",
+                    about_name: "齐亚德·贾马尔·肖基·穆罕默德·优素福",
+                    about_dob: "出生日期：2003年1月23日",
+                    about_skills_title: "能力",
+                    about_skill_1: "创建和开发网站。",
+                    about_skill_2: "制作带有多种方言配音的动态图形视频。",
+                    about_skill_3: "设计安卓和桌面应用程序（例如 ZG ZEZO APPS, ZGPT 等）。",
+                    about_experience_title: "主要作品",
+                    about_exp_1: "与沙特阿拉伯达尔公司合作（2019年5月19日）。",
+                    about_exp_2: "参与“伟大的古兰经”项目，为安卓和iPhone开发应用程序。",
+                    about_exp_3: "为GAMES 2EGYPT设计图形。",
+                    about_exp_5: "华为项目贡献者。",
+                    about_projects_title: "我的项目",
+                    about_certs_title: "认证证书",
+                    about_contact_title: "商务与联系",
+                    close: "关闭",
+                    settings_title: "设置与外观",
+                    settings_primary_color_title: "主题外观定制",
+                    settings_primary_color_label: "主色调（标题与按钮）",
+                    settings_background_title: "动态背景渐变色",
+                    settings_light_start: "起始颜色（浅色模式）",
+                    settings_light_end: "结束颜色（浅色模式）",
+                    settings_dark_start: "起始颜色（深色模式）",
+                    settings_dark_end: "结束颜色（深色模式）",
+                    settings_animation_title: "动画控制",
+                    settings_toggle_animation: "开启背景动态流动",
+                    settings_reset_title: "重置",
+                    settings_reset_desc: "将所有外观、主题和语言恢复为初始预设。",
+                    settings_reset_button: "全部重置",
+                    services_modal_title: "我们的其他服务",
+                    privacy_modal_title: "隐私政策",
+                    privacy_policy_content: `
+                        <p>在 ZG Sound 和 ZG STORE，我们视用户隐私为重中之重：</p>
+                        <h3>1. 纯本地化数据处理</h3>
+                        <p>ZG Sound 完全在您的计算机本地运行。您的音频会话、录音工程、素材文件绝不会被上传至外部服务器。</p>
+                        <h3>2. 本地偏好记录</h3>
+                        <p>仅在本地存储您的主题偏好、语言设置与色彩定制，且不会追踪您的个人使用习惯。</p>
+                        <h3>3. 知识产权与作品归属</h3>
+                        <p>您对使用 ZG Sound 制作的所有音乐、录音工程拥有 100% 的版权所有权。</p>
+                        <h3>4. 联系我们</h3>
+                        <p>如有任何疑问，请联系官方邮箱：zgzezoapps@gmail.com</p>
+                    `
+                }
+            };
+
+            // Switch Language Function
+            function changeLanguage(lang) {
+                if (!translations[lang]) return;
+
+                htmlTag.lang = lang;
+                htmlTag.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+
+                document.title = translations[lang].page_title;
+
+                document.querySelectorAll('[data-translate-key]').forEach(el => {
+                    const key = el.getAttribute('data-translate-key');
+                    if (translations[lang][key]) {
+                        if (key === 'detailed_description' || key === 'privacy_policy_content') {
+                            el.innerHTML = translations[lang][key];
+                        } else {
+                            el.innerText = translations[lang][key];
+                        }
+                    }
+                });
+
+                Object.values(langButtons).forEach(btn => btn.classList.remove('active'));
+                if (langButtons[lang]) langButtons[lang].classList.add('active');
+
+                localStorage.setItem('zg_language', lang);
+            }
+
+            Object.keys(langButtons).forEach(lang => {
+                langButtons[lang].addEventListener('click', () => changeLanguage(lang));
+            });
+
+            // Theme Management
+            function applyTheme(theme) {
+                if (theme === 'dark') {
+                    body.classList.add('dark-mode');
+                } else {
+                    body.classList.remove('dark-mode');
+                }
+                localStorage.setItem('zg_theme', theme);
+                applyCustomColors();
+            }
+
+            themeToggleButton.addEventListener('click', () => {
+                const newTheme = body.classList.contains('dark-mode') ? 'light' : 'dark';
+                applyTheme(newTheme);
+            });
+
+            // Modal Handlers
+            const openModal = (modal) => { if (modal) modal.style.display = 'flex'; };
+            const closeModal = (modal) => { if (modal) modal.style.display = 'none'; };
+
+            servicesToggleBtn.addEventListener('click', () => openModal(servicesModal));
+            aboutToggleBtn.addEventListener('click', () => openModal(aboutModal));
+            privacyToggleBtn.addEventListener('click', () => openModal(privacyModal));
+            settingsToggleBtn.addEventListener('click', () => openModal(settingsModal));
+
+            modalCloseBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    closeModal(e.target.closest('.modal-overlay'));
+                });
+            });
+
+            window.addEventListener('click', (e) => {
+                if (e.target.classList.contains('modal-overlay')) {
+                    closeModal(e.target);
+                }
+            });
+
+            // Screenshots and Posters Preview (Lightbox)
+            mediaItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const src = item.getAttribute('data-img');
+                    if (src) {
+                        modalImage.src = src;
+                        openModal(imageModal);
+                    }
+                });
+            });
+
+            // Download simulation
+            downloadButtons.forEach(btn => {
+                if (!btn) return;
+                btn.addEventListener('click', (e) => {
+                    if (btn.classList.contains('downloading')) {
+                        e.preventDefault();
+                        return;
+                    }
+                    btn.classList.add('downloading');
+                    setTimeout(() => {
+                        btn.classList.remove('downloading');
+                    }, 2500);
+                });
+            });
+
+            // Custom Color Settings
+            const defaultColors = {
+                primary: '#00b4d8',
+                light: { start: '#0f2027', end: '#203a43' },
+                dark: { start: '#0a0e17', end: '#162032' }
+            };
+
+            function applyCustomColors() {
+                const isDark = body.classList.contains('dark-mode');
+                const themeKey = isDark ? 'dark' : 'light';
+                const startColor = localStorage.getItem(`zg-bg-${themeKey}-start`) || defaultColors[themeKey].start;
+                const endColor = localStorage.getItem(`zg-bg-${themeKey}-end`) || defaultColors[themeKey].end;
+                document.documentElement.style.setProperty('--bg-gradient-start', startColor);
+                document.documentElement.style.setProperty('--bg-gradient-end', endColor);
+            }
+
+            function applyPrimaryColor() {
+                const primary = localStorage.getItem('zg-primary-color') || defaultColors.primary;
+                document.documentElement.style.setProperty('--primary-color', primary);
+            }
+
+            function toggleAnimation(enabled) {
+                localStorage.setItem('zg-animation-enabled', enabled);
+                if (enabled) {
+                    body.classList.remove('animation-disabled');
+                } else {
+                    body.classList.add('animation-disabled');
+                }
+            }
+
+            primaryColorPicker.addEventListener('input', (e) => {
+                localStorage.setItem('zg-primary-color', e.target.value);
+                applyPrimaryColor();
+            });
+
+            lightStartColorPicker.addEventListener('input', (e) => {
+                localStorage.setItem('zg-bg-light-start', e.target.value);
+                applyCustomColors();
+            });
+            lightEndColorPicker.addEventListener('input', (e) => {
+                localStorage.setItem('zg-bg-light-end', e.target.value);
+                applyCustomColors();
+            });
+            darkStartColorPicker.addEventListener('input', (e) => {
+                localStorage.setItem('zg-bg-dark-start', e.target.value);
+                applyCustomColors();
+            });
+            darkEndColorPicker.addEventListener('input', (e) => {
+                localStorage.setItem('zg-bg-dark-end', e.target.value);
+                applyCustomColors();
+            });
+            animationToggle.addEventListener('change', (e) => toggleAnimation(e.target.checked));
+
+            resetSettingsBtn.addEventListener('click', () => {
+                const currentLang = localStorage.getItem('zg_language') || 'ar';
+                const confirmMsg = currentLang === 'ar' ? 'هل أنت متأكد من رغبتك في إعادة ضبط جميع الإعدادات؟'
+                                : currentLang === 'zh' ? '您确定要恢复默认设置吗？'
+                                : 'Are you sure you want to reset all settings to defaults?';
+                if (confirm(confirmMsg)) {
+                    localStorage.removeItem('zg_theme');
+                    localStorage.removeItem('zg_language');
+                    localStorage.removeItem('zg-primary-color');
+                    localStorage.removeItem('zg-bg-light-start');
+                    localStorage.removeItem('zg-bg-light-end');
+                    localStorage.removeItem('zg-bg-dark-start');
+                    localStorage.removeItem('zg-bg-dark-end');
+                    localStorage.removeItem('zg-animation-enabled');
+                    window.location.reload();
+                }
+            });
+
+            // Initialize Settings
+            function loadSettings() {
+                const savedLang = localStorage.getItem('zg_language') || 'ar';
+                changeLanguage(savedLang);
+
+                const savedTheme = localStorage.getItem('zg_theme') || 'dark';
+                applyTheme(savedTheme);
+
+                const savedPrimary = localStorage.getItem('zg-primary-color') || defaultColors.primary;
+                primaryColorPicker.value = savedPrimary;
+                applyPrimaryColor();
+
+                lightStartColorPicker.value = localStorage.getItem('zg-bg-light-start') || defaultColors.light.start;
+                lightEndColorPicker.value = localStorage.getItem('zg-bg-light-end') || defaultColors.light.end;
+                darkStartColorPicker.value = localStorage.getItem('zg-bg-dark-start') || defaultColors.dark.start;
+                darkEndColorPicker.value = localStorage.getItem('zg-bg-dark-end') || defaultColors.dark.end;
+                applyCustomColors();
+
+                const animEnabled = localStorage.getItem('zg-animation-enabled') !== 'false';
+                animationToggle.checked = animEnabled;
+                toggleAnimation(animEnabled);
+            }
+
+            loadSettings();
+        });
+    </script>
+</body>
+</html>
